@@ -25,3 +25,19 @@ class HTMLNode:
         props: {self.props}
         )
         """
+    
+class LeafNode(HTMLNode):
+    def __init__(self, tag : str, value : str, props : dict=None):
+        super().__init__(tag, value, None, props)
+    
+    def to_html(self):
+        # if the value is None raise an exception
+        if not self.value:
+            raise ValueError
+        if not self.tag:
+            return self.value
+        if not self.props:
+            return f'<{self.tag}>{self.value}</{self.tag}>'
+        else:
+            return f'<{self.tag} {self.props_to_html()}>{self.value}</{self.tag}>'
+    
