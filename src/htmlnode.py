@@ -12,15 +12,16 @@ class HTMLNode:
         if self.props:
             string = []
             for key in self.props.keys():
-                string.append(f'{key}={self.props[key].strip()}')
+                string.append(f'{key}="{self.props[key].strip()}"')
             return " ".join(string)
         else:
             return None
     
     def __repr__(self):
-        return f"""
+        return f"""HTMLNode(
         tag: {self.tag},
         value: {self.value},
         children: {self.children},
         props: {self.props}
+        )
         """
