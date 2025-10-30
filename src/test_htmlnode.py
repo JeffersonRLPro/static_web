@@ -31,3 +31,13 @@ class TestHTMLNode(unittest.TestCase):
         node = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
         self.assertEqual(node.to_html(), '<a href="https://www.google.com">Click me!</a>')
     
+    def test_repr_with_link(self):
+        node = HTMLNode("a", "Click me!", None, {"href": "https://www.google.com", "target": "_blank"})
+        string = f"""HTMLNode(
+        tag: a,
+        value: Click me!,
+        children: None,
+        props: {node.props}
+        )
+        """
+        self.assertEqual(repr(node), string)
