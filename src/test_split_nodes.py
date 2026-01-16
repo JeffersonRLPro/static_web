@@ -97,3 +97,42 @@ class TestSplitNodes(unittest.TestCase):
         self.assertEqual(result[4].text_type, TextType.BOLD)
         self.assertEqual(result[5].text, " special")
         self.assertEqual(result[5].text_type, TextType.TEXT)
+
+    def test_split_nodes_with_delimiter_at_start_or_end(self):
+        node = TextNode("**This** has a special delimiter present", TextType.TEXT)
+        result = split_nodes_delimiter([node], "**", TextType.BOLD)
+
+        self.assertEqual(len(result), 3)
+        self.assertEqual(result[0].text, "")
+        self.assertEqual(result[0].text_type, TextType.TEXT)
+        self.assertEqual(result[1].text, "This")
+        self.assertEqual(result[1].text_type, TextType.BOLD)
+        self.assertEqual(result[2].text, " has a special delimiter present")
+        self.assertEqual(result[2].text_type, TextType.TEXT)
+
+        node2 = TextNode("This has a special delimiter **present**", TextType.TEXT)
+        result2 = split_nodes_delimiter([node2], "**", TextType.BOLD)
+        
+        self.assertEqual(len(result2), 3)
+        self.assertEqual(result2[0].text, "This has a special delimiter ")
+        self.assertEqual(result2[0].text_type, TextType.TEXT)
+        self.assertEqual(result2[1].text, "present")
+        self.assertEqual(result2[1].text_type, TextType.BOLD)
+        self.assertEqual(result2[2].text, "")
+        self.assertEqual(result2[2].text_type, TextType.TEXT)
+
+    def test_split_nodes_with_mulitple_delimiters(self):
+        node = TextNode("**This** has a **special** delimiter present", TextType.TEXT)
+        result = split_nodes_delimiter([node], "**", TextType.BOLD)
+
+        self.assertEqual(len(result), 5)
+        self.assertEqual(result[0].text, "")
+        self.assertEqual(result[0].text_type, TextType.TEXT)
+        self.assertEqual(result[1].text, "This")
+        self.assertEqual(result[1].text_type, TextType.BOLD)
+        self.assertEqual(result[2].text, " has a ")
+        self.assertEqual(result[2].text_type, TextType.TEXT)
+        self.assertEqual(result[3].text, "special")
+        self.assertEqual(result[3].text_type, TextType.BOLD)
+        self.assertEqual(result[4].text, " delimiter present")
+        self.assertEqual(result[4].text_type, TextType.TEXT)
