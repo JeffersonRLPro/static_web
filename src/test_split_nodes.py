@@ -286,3 +286,54 @@ class TestSplitNodes(unittest.TestCase):
             ],
             results,
         )
+
+    def test_split_link_no_link(self):
+        node = TextNode("There is no link present", TextType.TEXT)
+        results = split_nodes_link([node])
+
+        self.assertEqual([node], results)
+
+    def test_split_link_with_multiple_nodes(self):
+        node1 = TextNode("[to youtube](https://www.youtube.com/@bootdotdev) this node has a link at the start", TextType.TEXT)
+        node2 = TextNode("This node has a link [to youtube](https://www.youtube.com/@bootdotdev) and [to bootdev](https://www.boot.dev) cool!", TextType.TEXT)
+        results = split_nodes_link([node1, node2])
+
+        self.assertListEqual(
+            [
+                TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"),
+                TextNode(" this node has a link at the start", TextType.TEXT),
+                TextNode("This node has a link ", TextType.TEXT),
+                TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"),
+                TextNode(" and ", TextType.TEXT),
+                TextNode("to bootdev", TextType.LINK, "https://www.boot.dev"),
+                TextNode(" cool!", TextType.TEXT),
+            ],
+            results,
+        )
+    
+    def test_split_link_middle(self):
+        node = TextNode("This node has a link in the middle [to bootdev](https://www.boot.dev) this is so very cool", TextType.TEXT)
+        results = split_nodes_link([node])
+
+        self.assertListEqual(
+            [
+                TextNode("This node has a link in the middle ", TextType.TEXT),
+                TextNode("to bootdev", TextType.LINK, "https://www.boot.dev"),
+                TextNode(" this is so very cool", TextType.TEXT),
+            ],
+            results,
+        )
+
+    def test_split_link_with_invalid_parameter(self):
+        with self.assertRaises(TypeError):
+            split_nodes_link("this is not a list")
+
+    def test_split_link_with_invalid_list_objects(self):
+        with self.assertRaises(TypeError):
+            split_nodes_link(["This is not a list of TextNode objects"])
+
+    def test_split_link_with_nonTEXT_TextType(self):
+        node = TextNode("This is a non text **type**", TextType.BOLD)
+        results = split_nodes_link([node])
+
+        self.assertEqual([node], results)
