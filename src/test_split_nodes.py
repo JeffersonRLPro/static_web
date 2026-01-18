@@ -1,6 +1,6 @@
 import unittest
 
-from split_nodes import split_nodes_delimiter
+from split_nodes import split_nodes_delimiter, split_nodes_image, split_nodes_link
 from textnode import TextType, TextNode
 
 class TestSplitNodes(unittest.TestCase):
@@ -102,37 +102,129 @@ class TestSplitNodes(unittest.TestCase):
         node = TextNode("**This** has a special delimiter present", TextType.TEXT)
         result = split_nodes_delimiter([node], "**", TextType.BOLD)
 
-        self.assertEqual(len(result), 3)
-        self.assertEqual(result[0].text, "")
-        self.assertEqual(result[0].text_type, TextType.TEXT)
-        self.assertEqual(result[1].text, "This")
-        self.assertEqual(result[1].text_type, TextType.BOLD)
-        self.assertEqual(result[2].text, " has a special delimiter present")
-        self.assertEqual(result[2].text_type, TextType.TEXT)
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0].text, "This")
+        self.assertEqual(result[0].text_type, TextType.BOLD)
+        self.assertEqual(result[1].text, " has a special delimiter present")
+        self.assertEqual(result[1].text_type, TextType.TEXT)
 
         node2 = TextNode("This has a special delimiter **present**", TextType.TEXT)
         result2 = split_nodes_delimiter([node2], "**", TextType.BOLD)
         
-        self.assertEqual(len(result2), 3)
+        self.assertEqual(len(result2), 2)
         self.assertEqual(result2[0].text, "This has a special delimiter ")
         self.assertEqual(result2[0].text_type, TextType.TEXT)
         self.assertEqual(result2[1].text, "present")
         self.assertEqual(result2[1].text_type, TextType.BOLD)
-        self.assertEqual(result2[2].text, "")
-        self.assertEqual(result2[2].text_type, TextType.TEXT)
 
     def test_split_nodes_with_mulitple_delimiters(self):
         node = TextNode("**This** has a **special** delimiter present", TextType.TEXT)
         result = split_nodes_delimiter([node], "**", TextType.BOLD)
 
-        self.assertEqual(len(result), 5)
-        self.assertEqual(result[0].text, "")
-        self.assertEqual(result[0].text_type, TextType.TEXT)
-        self.assertEqual(result[1].text, "This")
-        self.assertEqual(result[1].text_type, TextType.BOLD)
-        self.assertEqual(result[2].text, " has a ")
-        self.assertEqual(result[2].text_type, TextType.TEXT)
-        self.assertEqual(result[3].text, "special")
-        self.assertEqual(result[3].text_type, TextType.BOLD)
-        self.assertEqual(result[4].text, " delimiter present")
-        self.assertEqual(result[4].text_type, TextType.TEXT)
+        self.assertEqual(len(result), 4)
+        self.assertEqual(result[0].text, "This")
+        self.assertEqual(result[0].text_type, TextType.BOLD)
+        self.assertEqual(result[1].text, " has a ")
+        self.assertEqual(result[1].text_type, TextType.TEXT)
+        self.assertEqual(result[2].text, "special")
+        self.assertEqual(result[2].text_type, TextType.BOLD)
+        self.assertEqual(result[3].text, " delimiter present")
+        self.assertEqual(result[3].text_type, TextType.TEXT)
+    
+    def test_split_images_multiple(self):
+        node = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with an ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and another ", TextType.TEXT),
+                TextNode(
+                    "second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"
+                ),
+            ],
+            new_nodes,
+        )
+    
+    def test_split_image_start(self):
+        node = TextNode("![image](https://i.imgur.com/zjjcJKZ.png) This node starts with an image", TextType.TEXT)
+        results = split_nodes_image([node])
+
+        self.assertListEqual(
+            [
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" This node starts with an image", TextType.TEXT),
+            ],
+            results,
+        )
+
+    def test_split_image_end(self):
+        node = TextNode("This node ends with an image ![image](https://i.imgur.com/zjjcJKZ.png)", TextType.TEXT)
+        results = split_nodes_image([node])
+
+        self.assertListEqual(
+            [
+                TextNode("This node ends with an image ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+            ],
+            results,
+        )
+    
+    def test_split_image_end_and_start(self):
+        node = TextNode("![image](https://i.imgur.com/zjjcJKZ.png) This node starts and ends with an image ![image](https://i.imgur.com/zjjcJKZ.png)", TextType.TEXT)
+        results = split_nodes_image([node])
+
+        self.assertListEqual(
+            [
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" This node starts and ends with an image ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+            ],
+            results,
+        )
+    
+    def test_split_image_no_link(self):
+        node = TextNode("This node has no link for an image", TextType.TEXT)
+        results = split_nodes_image([node])
+
+        self.assertEqual([node], results)
+
+    def test_split_image_multiple_nodes(self):
+        node1 = TextNode("![image](https://i.imgur.com/zjjcJKZ.png) This node starts with an image", TextType.TEXT)
+        node2 = TextNode("![image](https://i.imgur.com/zjjcJKZ.png) This node starts and ends with an image ![image](https://i.imgur.com/zjjcJKZ.png)", TextType.TEXT)
+        results = split_nodes_image([node1, node2])
+
+        self.assertListEqual(
+            [
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" This node starts with an image", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" This node starts and ends with an image ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+            ],
+            results,
+        )
+
+    def test_split_image_middle(self):
+        node = TextNode("This node has the image in the middle ![image](https://i.imgur.com/zjjcJKZ.png) now that is a nice change", TextType.TEXT)
+        results = split_nodes_image([node])
+
+        self.assertListEqual(
+            [
+                TextNode("This node has the image in the middle ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" now that is a nice change", TextType.TEXT),
+            ],
+            results,
+        )
+
+    def test_split_image_with_parameter(self):
+        with self.assertRaises(TypeError):
+            split_nodes_image("this is not a list")
+
+    def test_split_image_with_invalid_type_in_list(self):
+        with self.assertRaises(TypeError):
+            split_nodes_image(["This is not a node"])
