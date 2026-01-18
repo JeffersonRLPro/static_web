@@ -228,3 +228,61 @@ class TestSplitNodes(unittest.TestCase):
     def test_split_image_with_invalid_type_in_list(self):
         with self.assertRaises(TypeError):
             split_nodes_image(["This is not a node"])
+    
+    def test_split_image_with_nonText_textType(self):
+        node = TextNode("This is an image ![image](https://i.imgur.com/zjjcJKZ.png)", TextType.BOLD)
+        results = split_nodes_image([node])
+
+        self.assertEqual([node], results)
+    
+    def test_split_link_multiple(self):
+        node = TextNode("This node has a link [to youtube](https://www.youtube.com/@bootdotdev) and a link [to bootdev](https://www.boot.dev) cool!", TextType.TEXT)
+        results = split_nodes_link([node])
+
+        self.assertListEqual(
+            [
+                TextNode("This node has a link ", TextType.TEXT),
+                TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"),
+                TextNode(" and a link ", TextType.TEXT),
+                TextNode("to bootdev", TextType.LINK, "https://www.boot.dev"),
+                TextNode(" cool!", TextType.TEXT),
+            ],
+            results,
+        )
+    
+    def test_split_link_start(self):
+        node = TextNode("[to bootdev](https://www.boot.dev) This node has a link first", TextType.TEXT)
+        results = split_nodes_link([node])
+
+        self.assertListEqual(
+            [
+                TextNode("to bootdev", TextType.LINK, "https://www.boot.dev"),
+                TextNode(" This node has a link first", TextType.TEXT),
+            ],
+            results,
+        )
+
+    def test_split_link_end(self):
+        node = TextNode("This node has a link last [to bootdev](https://www.boot.dev)", TextType.TEXT)
+        results = split_nodes_link([node])
+
+        self.assertListEqual(
+            [
+                TextNode("This node has a link last ", TextType.TEXT),
+                TextNode("to bootdev", TextType.LINK, "https://www.boot.dev"),
+            ],
+            results,
+        )
+    
+    def test_split_link_start_and_end(self):
+        node = TextNode("[to youtube](https://www.youtube.com/@bootdotdev) this node has a link at the start and at the end [to bootdev](https://www.boot.dev)", TextType.TEXT)
+        results = split_nodes_link([node])
+
+        self.assertListEqual(
+            [
+                TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"),
+                TextNode(" this node has a link at the start and at the end ", TextType.TEXT),
+                TextNode("to bootdev", TextType.LINK, "https://www.boot.dev"),
+            ],
+            results,
+        )

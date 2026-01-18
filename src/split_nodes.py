@@ -78,7 +78,7 @@ def split_nodes_link(old_nodes : list[TextNode]):
                 inner_nodes = []
                 current_text = node.text
                 for link_alt, link_url in matches:
-                    parts = current_text.split(f"![{link_alt}]({link_url})", 1)
+                    parts = current_text.split(f"[{link_alt}]({link_url})", 1)
                     if parts[0]:
                         inner_nodes.append(TextNode(parts[0], TextType.TEXT))
                     inner_nodes.append(TextNode(link_alt, TextType.LINK, link_url))
