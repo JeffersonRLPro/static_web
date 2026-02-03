@@ -44,7 +44,7 @@ def block_to_block_type(md_block : str):
             return BlockType.ORDERED_LIST
         order = 2
         for i in range(1, len(lines)):
-            if lines[i] != f"{i}. ":
+            if not lines[i].startswith(f"{order}. "):
                 return BlockType.PARAGRAPH
             order += 1
         return BlockType.ORDERED_LIST
