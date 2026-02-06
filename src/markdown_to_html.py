@@ -38,6 +38,7 @@ def _heading_block_to_html_node(block : str) -> HTMLNode:
     _heading_block_to_html_node is a helper method that creates HTML Nodes for markdown blocks 
     that are identified as a "heading" block 
     """
+
     # count the #'s
     count = 1
     for i in range(1, 6):
@@ -55,7 +56,11 @@ def _quote_block_to_html_node(block : str) -> HTMLNode:
     that are identified as a "quote" block 
     """
     # clean the block string to make sure it is all one line
-    lines = block.split("\n")
+    if block.startswith("> "):
+        stripped = block.strip("> ")
+    else:
+        stripped = block.strip(">")
+    lines = stripped.split("\n")
     clean_lines = [line.strip() for line in lines if line.strip() != ""]
     text = "".join(clean_lines)
     # find all children for the overall HTMLNode
