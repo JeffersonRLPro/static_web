@@ -9,6 +9,12 @@ class BlockType(Enum):
     ORDERED_LIST = "ordered_list"
 
 def block_to_block_type(md_block : str):
+    """
+    block_to_block_type takes in a markdown block as input and return the BlockType of the markdown block
+    
+    :param md_block: a stripped chunk of a markdown string
+    :type md_block: str
+    """
     # check if varibale is string
     if not isinstance(md_block, str):
         raise TypeError("block type can only be found when the markdown is a string")

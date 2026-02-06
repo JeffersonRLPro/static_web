@@ -27,6 +27,9 @@ class HTMLNode:
         """
     
 class LeafNode(HTMLNode):
+    """
+    LeafNode is a child of the HTMLNode class. A LeafNode cannot have any children, and it must have a value. 
+    """
     def __init__(self, tag, value, props : dict=None):
         super().__init__(tag, value, None, props)
     
@@ -42,6 +45,9 @@ class LeafNode(HTMLNode):
             return f'<{self.tag} {self.props_to_html()}>{self.value}</{self.tag}>'
 
 class ParentNode(HTMLNode):
+    """
+    ParentNode is a child of the HTMLNode class. The parent node must have a list of child nodes which are also HTMLnodes. 
+    """
     def __init__(self, tag, children : list[object], props : dict=None):
         super().__init__(tag, None, children, props)
         # check all varibales to ensure they are all correct

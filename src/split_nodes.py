@@ -5,6 +5,16 @@ from extract_markdown import extract_markdown_images, extract_markdown_links
 # types in a single sentence
 # NOTE: This only handles inline styles like bold, italic, and code
 def split_nodes_delimiter(old_nodes : list[TextNode], delimiter : str, text_type):
+    """
+    split_nodes_delimiter is to split text nodes and handle many different text types in a single sentence. it returns a list of TextNodes
+    NOTE: This only handles inline styles like bold, italic, and code
+    
+    :param old_nodes: a list of TextNodes to split into more TextNodes, depending on the text_type
+    :type old_nodes: list[TextNode]
+    :param delimiter: a delimeter used to split the text within a TextNode please use the following(`, _, **)
+    :type delimiter: str
+    :param text_type: The TextType of the new nodes
+    """
     if not isinstance(old_nodes, list):
         raise TypeError("old_nodes must be a list of TextNodes objects")
     new_nodes = []
@@ -35,6 +45,13 @@ def split_nodes_delimiter(old_nodes : list[TextNode], delimiter : str, text_type
 # the following functions, like the one above, splits textnodes that have images and links
 # NOTE: This function only splits links and images, not bold, italics, etc.
 def split_nodes_image(old_nodes : list[TextNode]):
+    """
+    split_nodes_image splits TextNodes to create TextNodes with an IMAGE TextType. Returns a list of TextNodes
+    NOTE: This function only splits images, not bold, italics, etc.
+    
+    :param old_nodes: A list of TextNodes with a TEXT TextType
+    :type old_nodes: list[TextNode]
+    """
     if not isinstance(old_nodes, list):
         raise TypeError("old_nodes must be a list of TextNodes objects")
     new_nodes = []
