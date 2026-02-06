@@ -49,7 +49,7 @@ def split_nodes_image(old_nodes : list[TextNode]):
     split_nodes_image splits TextNodes to create TextNodes with an IMAGE TextType. Returns a list of TextNodes
     NOTE: This function only splits images, not bold, italics, etc.
     
-    :param old_nodes: A list of TextNodes with a TEXT TextType
+    :param old_nodes: A list of TextNodes
     :type old_nodes: list[TextNode]
     """
     if not isinstance(old_nodes, list):
@@ -81,6 +81,13 @@ def split_nodes_image(old_nodes : list[TextNode]):
     return new_nodes
 
 def split_nodes_link(old_nodes : list[TextNode]):
+    """
+    split_nodes_link splits TextNodes to create TextNodes with a LINK TextType. Returns a list of TextNodes
+    NOTE: This function only splits links, not bold, italics, etc.
+    
+    :param old_nodes: A list of TextNodes
+    :type old_nodes: list[TextNode]
+    """
     if not isinstance(old_nodes, list):
         raise TypeError("old_nodes must be a list of TextNodes objects")
     new_nodes = []
