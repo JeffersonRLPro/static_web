@@ -60,7 +60,13 @@ def _quote_block_to_html_node(block : str) -> HTMLNode:
     text = "".join(clean_lines)
     # find all children for the overall HTMLNode
     children = _text_to_children(text)
-    return 
+    return HTMLNode("blockquote", None, children)
+
+def _unordered_list_to_html_node(block : str) -> HTMLNode:
+    """
+    _unordered_list_to_html_node is a helper method that creates HTML Nodes for markdown blocks 
+    that are identified as a "unordered_list" block 
+    """ 
 
 def _text_to_children(text : str) -> list[HTMLNode]:
     """
