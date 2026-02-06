@@ -38,7 +38,6 @@ def _heading_block_to_html_node(block : str) -> HTMLNode:
     _heading_block_to_html_node is a helper method that creates HTML Nodes for markdown blocks 
     that are identified as a "heading" block 
     """
-
     # count the #'s
     count = 1
     for i in range(1, 6):
