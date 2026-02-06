@@ -4,7 +4,7 @@ from extract_markdown import extract_markdown_images, extract_markdown_links
 # This function is to split text nodes and handle many different text
 # types in a single sentence
 # NOTE: This only handles inline styles like bold, italic, and code
-def split_nodes_delimiter(old_nodes : list[TextNode], delimiter : str, text_type):
+def split_nodes_delimiter(old_nodes : list[TextNode], delimiter : str, text_type) -> list[TextNode]:
     """
     split_nodes_delimiter is to split text nodes and handle many different text types in a single sentence. it returns a list of TextNodes
     NOTE: This only handles inline styles like bold, italic, and code
@@ -44,7 +44,7 @@ def split_nodes_delimiter(old_nodes : list[TextNode], delimiter : str, text_type
     
 # the following functions, like the one above, splits textnodes that have images and links
 # NOTE: This function only splits links and images, not bold, italics, etc.
-def split_nodes_image(old_nodes : list[TextNode]):
+def split_nodes_image(old_nodes : list[TextNode]) -> list[TextNode]:
     """
     split_nodes_image splits TextNodes to create TextNodes with an IMAGE TextType. Returns a list of TextNodes
     NOTE: This function only splits images, not bold, italics, etc.
@@ -80,7 +80,7 @@ def split_nodes_image(old_nodes : list[TextNode]):
                 new_nodes.append(node)
     return new_nodes
 
-def split_nodes_link(old_nodes : list[TextNode]):
+def split_nodes_link(old_nodes : list[TextNode]) -> list[TextNode]:
     """
     split_nodes_link splits TextNodes to create TextNodes with a LINK TextType. Returns a list of TextNodes
     NOTE: This function only splits links, not bold, italics, etc.

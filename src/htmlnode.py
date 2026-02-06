@@ -1,5 +1,16 @@
 class HTMLNode:
     def __init__(self, tag:str=None, value:str=None, children:list[object]=None, props:dict=None):
+        """
+        :param self: Self@HTMLNode
+        :param tag: The HTML Tag the HTML node represents
+        :type tag: str
+        :param value: The actual markdown string
+        :type value: str
+        :param children: A list of HTML node children that are connected to the HTML node
+        :type children: list[object]
+        :param props: a dictionary of the link, and href
+        :type props: dict
+        """
         self.tag = tag
         self.value = value
         self.children = children
