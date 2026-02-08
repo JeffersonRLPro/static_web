@@ -114,6 +114,28 @@ another quote
 
         self.assertEqual(results, BlockType.PARAGRAPH)
     
+    def test_middle_extra_space(self):
+        text = """
+>this is a quote
+>this is another quote
+ >another quote
+>last one
+""".strip()
+        results = block_to_block_type(text)
+
+        self.assertEqual(results, BlockType.PARAGRAPH)
+
+    def test_optional_space(self):
+        text = """
+> this is a quote
+>this is another quote
+> another quote
+>last one
+""".strip()
+        results = block_to_block_type(text)
+
+        self.assertEqual(results, BlockType.QUOTE)
+    
     def test_double_quote_char(self):
         text = ">> This is a quote".strip()
         results = block_to_block_type(text)

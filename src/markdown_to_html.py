@@ -1,6 +1,6 @@
 from markdown_to_blocks import markdown_to_blocks
 from block_types import BlockType, block_to_block_type
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, ParentNode
 from text_to_textnodes import text_to_textnodes
 from text_node_to_html import text_node_to_html_node
 
@@ -28,7 +28,7 @@ def _paragraph_block_to_html_node(block : str) -> HTMLNode:
     # clean the block string to make sure it is all one line
     lines = block.split("\n")
     clean_lines = [line.strip() for line in lines if line.strip() != ""]
-    text = "".join(clean_lines)
+    text = " ".join(clean_lines)
     # find the children of the overall HTML Node
     children = _text_to_children(text)
     return HTMLNode("p", None, children)
@@ -55,13 +55,16 @@ def _quote_block_to_html_node(block : str) -> HTMLNode:
     that are identified as a "quote" block 
     """
     # clean the block string to make sure it is all one line
-    if block.startswith("> "):
-        stripped = block.strip("> ")
-    else:
-        stripped = block.strip(">")
-    lines = stripped.split("\n")
-    clean_lines = [line.strip() for line in lines if line.strip() != ""]
-    text = "".join(clean_lines)
+    lines = block.split("\n")
+    clean_lines = []
+    for line in lines:
+        if line.startswith("> "):
+            clean_lines.append(line[2:].strip())
+        elif line.startswith(">"):
+            clean_lines.append(line[1:].strip())
+        else:
+            continue
+    text = " ".join(clean_lines)
     # find all children for the overall HTMLNode
     children = _text_to_children(text)
     return HTMLNode("blockquote", None, children)
@@ -71,6 +74,19 @@ def _unordered_list_to_html_node(block : str) -> HTMLNode:
     _unordered_list_to_html_node is a helper method that creates HTML Nodes for markdown blocks 
     that are identified as a "unordered_list" block 
     """ 
+    # clean the block
+    clean_block = block.split("\n")
+    parent_nodes = []
+    for line in clean_block:
+        if line.startswith("- "):
+            line = line[2:].strip()
+            # get the inline markdown (children) of the element in unordered list 
+            children = _text_to_children(line)
+            parent_nodes.append(ParentNode("li", children))
+        else:
+            continue
+    return HTMLNode("ul", None, parent_nodes)
+
 
 def _text_to_children(text : str) -> list[HTMLNode]:
     """
