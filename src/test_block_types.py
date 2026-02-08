@@ -2,7 +2,7 @@ import unittest
 
 from block_types import BlockType, block_to_block_type
 
-class TestBlocktype(unittest.TestCase):
+class TestBlockType(unittest.TestCase):
     def test_headings_block_case(self):
         text = "# Title"
         results = block_to_block_type(text)

@@ -1,6 +1,6 @@
 import re
 from markdown_to_blocks import markdown_to_blocks
-from block_types import block_to_block_type
+from block_types import BlockType, block_to_block_type
 from htmlnode import HTMLNode, ParentNode
 from text_to_textnodes import text_to_textnodes
 from text_node_to_html import text_node_to_html_node
@@ -22,17 +22,17 @@ def markdown_to_html_node(markdown : str) -> HTMLNode:
         # find the block type
         block_type = block_to_block_type(block)
         # create HTML nodes based on what block it is
-        if block_type == "paragraph":
+        if block_type == BlockType.PARAGRAPH:
             node = _paragraph_block_to_html_node(block)
-        elif block_type == "code":
+        elif block_type == BlockType.CODE:
             node = _code_to_html(block)
-        elif block_type == "heading":
+        elif block_type == BlockType.HEADING:
             node = _heading_block_to_html_node(block)
-        elif block_type == "quote":
+        elif block_type == BlockType.QUOTE:
             node = _quote_block_to_html_node(block)
-        elif block_type == "unordered_list":
+        elif block_type == BlockType.UNORDERED_LIST:
             node = _unordered_list_to_html_node(block)
-        elif block_type == "ordered_list":
+        elif block_type == BlockType.ORDERED_LIST:
             node = _ordered_lists_html_node(block)
         else:
             raise ValueError(f"Invalid BlockType: {block_type}")
@@ -129,8 +129,8 @@ def _code_to_html(block : str) -> HTMLNode:
     _code_to_html is a helper method that creates HTML Nodes for markdown blocks 
     that are identified as a "code" block
     """
-    clean_block = block.strip("```")
-    clean_block = [line.strip for line in clean_block if line.strip() != ""]
+    clean_block = block.split("\n")
+    clean_block = [line for line in clean_block if line.strip("```") != ""]
     text = "\n".join(clean_block) + "\n"
     # manually create a textNode
     node = TextNode(text, TextType.CODE)
