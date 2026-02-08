@@ -31,7 +31,7 @@ def _paragraph_block_to_html_node(block : str) -> HTMLNode:
     text = " ".join(clean_lines)
     # find the children of the overall HTML Node
     children = _text_to_children(text)
-    return HTMLNode("p", None, children)
+    return ParentNode("p", children)
 
 def _heading_block_to_html_node(block : str) -> HTMLNode:
     """
@@ -47,7 +47,7 @@ def _heading_block_to_html_node(block : str) -> HTMLNode:
             break
     # find all children for the overall HTMLNode
     children = _text_to_children(block)
-    return HTMLNode("h" + count, None, children)
+    return ParentNode("h" + count, children)
 
 def _quote_block_to_html_node(block : str) -> HTMLNode:
     """
@@ -67,7 +67,7 @@ def _quote_block_to_html_node(block : str) -> HTMLNode:
     text = " ".join(clean_lines)
     # find all children for the overall HTMLNode
     children = _text_to_children(text)
-    return HTMLNode("blockquote", None, children)
+    return ParentNode("blockquote", children)
 
 def _unordered_list_to_html_node(block : str) -> HTMLNode:
     """
@@ -85,7 +85,7 @@ def _unordered_list_to_html_node(block : str) -> HTMLNode:
             parent_nodes.append(ParentNode("li", children))
         else:
             continue
-    return HTMLNode("ul", None, parent_nodes)
+    return ParentNode("ul", parent_nodes)
 
 
 def _text_to_children(text : str) -> list[HTMLNode]:
