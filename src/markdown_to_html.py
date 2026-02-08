@@ -1,8 +1,11 @@
+import re
 from markdown_to_blocks import markdown_to_blocks
-from block_types import BlockType, block_to_block_type
+from block_types import block_to_block_type
 from htmlnode import HTMLNode, ParentNode
 from text_to_textnodes import text_to_textnodes
 from text_node_to_html import text_node_to_html_node
+from textnode import TextNode, TextType
+
 
 def markdown_to_html_node(markdown : str) -> HTMLNode:
     """
@@ -14,10 +17,28 @@ def markdown_to_html_node(markdown : str) -> HTMLNode:
     # split the markdown into blocks
     blocks = markdown_to_blocks(markdown)
     # loop over every block
+    html_nodes = []
     for block in blocks:
         # find the block type
         block_type = block_to_block_type(block)
         # create HTML nodes based on what block it is
+        if block_type == "paragraph":
+            node = _paragraph_block_to_html_node(block)
+        elif block_type == "code":
+            node = _code_to_html(block)
+        elif block_type == "heading":
+            node = _heading_block_to_html_node(block)
+        elif block_type == "quote":
+            node = _quote_block_to_html_node(block)
+        elif block_type == "unordered_list":
+            node = _unordered_list_to_html_node(block)
+        elif block_type == "ordered_list":
+            node = _ordered_lists_html_node(block)
+        else:
+            raise ValueError(f"Invalid BlockType: {block_type}")
+        html_nodes.append(node)
+    return ParentNode("div", html_nodes)
+
 
 
 def _paragraph_block_to_html_node(block : str) -> HTMLNode:
@@ -87,6 +108,34 @@ def _unordered_list_to_html_node(block : str) -> HTMLNode:
             continue
     return ParentNode("ul", parent_nodes)
 
+def _ordered_lists_html_node(block : str) -> HTMLNode:
+    """
+    _ordered_lists_html_node is a helper method that creates HTML Nodes for markdown blocks 
+    that are identified as a "ordered_list" block 
+    """
+    clean_block = block.split("\n")
+    parent_nodes = []
+    for line in clean_block:
+        if re.match(r"(\d*\.\ )", line):
+            line = line[3:].strip()
+            children = _text_to_children(line)
+            parent_nodes.append(ParentNode("li", children))
+        else:
+            continue
+    return ParentNode("ol", parent_nodes)
+
+def _code_to_html(block : str) -> HTMLNode:
+    """
+    _code_to_html is a helper method that creates HTML Nodes for markdown blocks 
+    that are identified as a "code" block
+    """
+    clean_block = block.strip("```")
+    clean_block = [line.strip for line in clean_block if line.strip() != ""]
+    text = "\n".join(clean_block) + "\n"
+    # manually create a textNode
+    node = TextNode(text, TextType.CODE)
+    leaf_node = text_node_to_html_node(node)
+    return ParentNode("pre", [leaf_node])
 
 def _text_to_children(text : str) -> list[HTMLNode]:
     """

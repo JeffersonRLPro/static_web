@@ -210,6 +210,17 @@ last item
         results = block_to_block_type(text)
 
         self.assertEqual(results, BlockType.PARAGRAPH)
+    
+    def test_extra_char_after_interval(self):
+        text = """
+1. This is the first item 
+2. this is another item
+3. another item
+4w. last item
+""".strip()
+        results = block_to_block_type(text)
+
+        self.assertEqual(results, BlockType.PARAGRAPH)
 
     def test_missing_space(self):
         text = """
