@@ -63,12 +63,14 @@ def _heading_block_to_html_node(block : str) -> HTMLNode:
     count = 1
     for i in range(1, 6):
         if block[i] == "#":
-            count =+ 1
+            count += 1
         else:
             break
+    # strip the #'s
+    clean_block = block[count + 1:] # 1 for the space between the #'s and the actual heading
     # find all children for the overall HTMLNode
-    children = _text_to_children(block)
-    return ParentNode("h" + count, children)
+    children = _text_to_children(clean_block)
+    return ParentNode(f"h{count}", children)
 
 def _quote_block_to_html_node(block : str) -> HTMLNode:
     """
