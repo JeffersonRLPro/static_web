@@ -255,5 +255,5 @@ last item
         with self.assertRaises(TypeError):
             block_to_block_type(text)
 
-    if __name__ == "__main__":
-        unittest.main()
+if __name__ == "__main__":
+    unittest.main()
