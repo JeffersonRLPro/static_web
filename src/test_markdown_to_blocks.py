@@ -127,3 +127,6 @@ new block ends here
                 "new block ends here",
             ],
         )
+
+if __name__ == "__main__":
+    unittest.main()

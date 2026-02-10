@@ -31,3 +31,6 @@ class TestExtractMarkdown(unittest.TestCase):
         matches = extract_markdown_images("This is text with and image, that is actually a link [image](https://i.imgur.com/zjjcJKZ.png)")
 
         self.assertListEqual([], matches)
+
+if __name__ == "__main__":
+    unittest.main()

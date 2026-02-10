@@ -72,3 +72,6 @@ class TestTexttoTextNodes(unittest.TestCase):
     def test_text_to_textnode_complex_error(self):
         with self.assertRaises(Exception):
             text_to_textnodes("This is **text* with an _italic word and a code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)")
+
+if __name__ == "__main__":
+    unittest.main()

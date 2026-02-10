@@ -135,3 +135,6 @@ the **same** even with inline stuff
             html,
             "<div><p>1. first item 2. second item 3.last item</p></div>"
         )
+
+if __name__ == "__main__":
+    unittest.main()

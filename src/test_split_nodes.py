@@ -337,3 +337,6 @@ class TestSplitNodes(unittest.TestCase):
         results = split_nodes_link([node])
 
         self.assertEqual([node], results)
+
+if __name__ == "__main__":
+    unittest.main()

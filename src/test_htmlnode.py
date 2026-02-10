@@ -78,3 +78,6 @@ class TestHTMLNode(unittest.TestCase):
         child_node2 = LeafNode("p", "hello, world!")
         with self.assertRaises(ValueError):
             ParentNode("p", [child_node, child_node2, 3, "hello"])
+
+if __name__ == "__main__":
+    unittest.main()
