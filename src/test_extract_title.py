@@ -45,3 +45,6 @@ class TestExtractTitle(unittest.TestCase):
 """
         result = extract_title(md)
         self.assertEqual(result, "here")
+
+if __name__ == "__main__":
+    unittest.main()
