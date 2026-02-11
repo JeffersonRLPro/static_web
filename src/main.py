@@ -1,8 +1,11 @@
-from textnode import TextNode, TextType
+import shutil
+import os
+from copy_directory import copy_directory
 
 def main():
-    test = TextNode("This is a test", TextType.LINK, "https://www.boot.dev")
-    print(test)
+    if os.path.exists("public"):
+        shutil.rmtree("public")
+    copy_directory("static", "public")
 
 
 if __name__ == "__main__":
