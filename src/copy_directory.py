@@ -22,6 +22,7 @@ def copy_directory(source, destination):
             logging.debug(f"copying the file {entry} to the directory {os.path.abspath(destination)}")
             shutil.copy(entry_path, destination)
         else:
+            logging.debug(f"creating directory: {entry} into {destination} directory")
             os.mkdir(os.path.join(destination, entry))
             logging.debug(f"going into {entry} directory")
             copy_directory(entry_path, os.path.join(destination, entry))
