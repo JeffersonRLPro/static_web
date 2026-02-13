@@ -5,10 +5,13 @@ from copy_directory import copy_directory
 from generate_site import generate_pages_recursive
 
 def main():
-    if sys.argv[1]:
-        basepath = sys.argv[1]
-    else:
-        basepath = "/"
+    try:
+        if sys.argv[1]:
+            basepath = sys.argv[1]
+        else:
+            basepath = "/"
+    except:
+        ValueError("The correct call is: ./main '/REPO-NAME/'" )
     print(basepath)
     if os.path.exists("docs"):
         shutil.rmtree("docs")
