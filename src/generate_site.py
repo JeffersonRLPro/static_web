@@ -57,6 +57,6 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, bas
             else:
                 if item.endswith(".md"):
                     # build dest path
-                    item_rel = item_path[8:]
+                    item_rel = item_path[10:]
                     html_dest_path = os.path.join(dest_dir_path, f"{item_rel[:-3]}.html")
                     generate_page(item_path, template_path, html_dest_path, basepath)

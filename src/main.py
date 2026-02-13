@@ -4,18 +4,20 @@ import sys
 from copy_directory import copy_directory
 from generate_site import generate_pages_recursive
 
+dir_path_static = "./static"
+dir_path_public = "./docs"
+template_path = "./template.html"
+dir_path_content = "./content"
+default_basepath = "/"
+
 def main():
-    try:
-        if sys.argv[1]:
-            basepath = sys.argv[1]
-        else:
-            basepath = "/"
-    except:
-        ValueError("The correct call is: ./main '/REPO-NAME/'")
-    if os.path.exists("docs"):
-        shutil.rmtree("docs")
-    copy_directory("static", "docs")
-    generate_pages_recursive("content", "template.html", "docs", basepath)
+    basepath = default_basepath
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
+    if os.path.exists(dir_path_public):
+        shutil.rmtree(dir_path_public)
+    copy_directory(dir_path_static, dir_path_public)
+    generate_pages_recursive(dir_path_content, template_path, dir_path_public, basepath)
 
 if __name__ == "__main__":
     main()
