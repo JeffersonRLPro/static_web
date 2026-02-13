@@ -11,8 +11,7 @@ def main():
         else:
             basepath = "/"
     except:
-        ValueError("The correct call is: ./main '/REPO-NAME/'" )
-    print(basepath)
+        ValueError("The correct call is: ./main '/REPO-NAME/'")
     if os.path.exists("docs"):
         shutil.rmtree("docs")
     copy_directory("static", "docs")

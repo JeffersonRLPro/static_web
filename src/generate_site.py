@@ -32,11 +32,11 @@ def generate_page(from_path, template_path, dest_path, basepath):
     html = node.to_html()
     title = extract_title(markdown)
     updated_html = html_temp.replace("{{ Title }}", title).replace("{{ Content }}", html)
-    updated_html = updated_html.replace("href=/", f"href={basepath}").replace("src=/", f"src={basepath}")
+    updated_href_src = updated_html.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
     destination_path = os.path.dirname(dest_path)
     os.makedirs(destination_path, exist_ok = True)
     with open(dest_path, 'w') as f1:
-        f1.write(updated_html)
+        f1.write(updated_href_src)
     
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     """
