@@ -5,9 +5,11 @@ from copy_directory import copy_directory
 from generate_site import generate_pages_recursive
 
 def main():
-    if sys.argv[0]:
-        basepath = sys.argv[0]
-    basepath = "/"
+    if sys.argv[1]:
+        basepath = sys.argv[1]
+    else:
+        basepath = "/"
+    print(basepath)
     if os.path.exists("docs"):
         shutil.rmtree("docs")
     copy_directory("static", "docs")
