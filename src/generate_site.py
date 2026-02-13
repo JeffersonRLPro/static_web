@@ -12,7 +12,7 @@ def extract_title(markdown):
         if line.startswith("# "):
             title = line[2:].strip()
             return title
-    raise Exception(f"No title found in provided markdown: {markdown}")
+    raise ValueError(f"No title found in provided markdown: {markdown}")
 
 def generate_page(from_path, template_path, dest_path):
     """
@@ -51,11 +51,11 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
         contents = os.listdir(dir_path_content)
         for item in contents:
             item_path = os.path.join(dir_path_content, item)
-            print(item_path)
             if not os.path.isfile(item_path):
                 generate_pages_recursive(item_path, template_path, dest_dir_path)
             else:
                 if item.endswith(".md"):
                     # build dest path
-                    html_dest_path = os.path.join(dest_dir_path, f"{item_path[:-3]}.html")
+                    item_rel = item_path[8:]
+                    html_dest_path = os.path.join(dest_dir_path, f"{item_rel[:-3]}.html")
                     generate_page(item_path, template_path, html_dest_path)
